@@ -3,6 +3,7 @@ var continueStep;
 
 $(document).ready(function() {
   $("#runBtn").click(function() {
+    if (_w != undefined) _w.terminate();
     _w = undefined;
     _w = new Worker("assets/js/befunge93.js");
     _w.addEventListener(
@@ -29,7 +30,7 @@ $(document).ready(function() {
     _w.postMessage({ cmd: "start", code: $("#codeInput").val(), time: 1 });
   });
   $("#stopBtn").click(function() {
-    _w.terminate();
+    if (_w != undefined) _w.terminate();
     _w = undefined;
   });
 });
