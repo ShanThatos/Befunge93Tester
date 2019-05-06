@@ -1,5 +1,5 @@
 var code;
-var cR, cC, cD, cWidth, cHeight;
+var cR, cC, cD, cWidth, cHeight, stepCount;
 var st;
 var stringMode, reachedEnd, waitingForInput;
 var output;
@@ -11,14 +11,17 @@ self.addEventListener(
   function(e) {
     switch (e.data.cmd) {
       case "start":
-        start(e.data.code);
+        start(e.data.code, e.data.stepCount);
         setInterval(function() {
-          if (!waitingForInput) step(1);
+          if (!waitingForInput) step(stepCount);
         }, e.data.time);
         break;
       case "userInput":
         userInput = e.data.userInput;
         waitingForInput = false;
+        break;
+      case "stepCountChange":
+        stepCount = e.data.stepCount;
         break;
     }
   },
@@ -29,11 +32,12 @@ function getOutput() {
   return output;
 }
 
-function start(str) {
+function start(str, sC) {
   parseCode(str);
   cR = 0;
   cC = 0;
   cD = 0;
+  stepCount = sC;
   st = [];
   stringMode = false;
   reachedEnd = false;

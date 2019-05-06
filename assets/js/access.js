@@ -2,6 +2,13 @@ var _w;
 var continueStep;
 
 $(document).ready(function() {
+  function getStepCount() {
+    var sC = $("#stepCountInput").val();
+    console.log(sC);
+    if (sC.trim() == "") return 1;
+    else return Math.max(1, Math.max(100, parseInt(sC)));
+  }
+
   $("#runBtn").click(function() {
     if (_w != undefined) _w.terminate();
     _w = undefined;
@@ -27,10 +34,19 @@ $(document).ready(function() {
       },
       false
     );
-    _w.postMessage({ cmd: "start", code: $("#codeInput").val(), time: 1 });
+    _w.postMessage({
+      cmd: "start",
+      code: $("#codeInput").val(),
+      time: 1,
+      stepCount: getStepCount()
+    });
   });
   $("#stopBtn").click(function() {
     if (_w != undefined) _w.terminate();
     _w = undefined;
+  });
+  $("#stepCountInput").change(function() {
+    if (_w != undefined)
+      _w.postMessage({ cmd: "stepCountChange", stepCount: getStepCount() });
   });
 });
